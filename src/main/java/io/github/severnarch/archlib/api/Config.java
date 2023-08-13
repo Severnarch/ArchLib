@@ -74,6 +74,14 @@ public class Config {
     public void addProperty(String propertyName, Object defaultPropertyValue) {
         properties.put(propertyName, defaultPropertyValue);
     }
+    public void setProperty(String propertyName, Object propertyValue) throws PropertyNotFoundException {
+        if (properties.containsKey(propertyName)) {
+            properties.remove(propertyName);
+            properties.put(propertyName, propertyValue);
+        } else {
+            throw new PropertyNotFoundException(propertyName, fileName);
+        }
+    }
     public void removeProperty(String propertyName) throws PropertyNotFoundException {
         if (properties.containsKey(propertyName)) {
             properties.remove(propertyName);
@@ -81,7 +89,6 @@ public class Config {
             throw new PropertyNotFoundException(propertyName, fileName);
         }
     }
-
     public Object getProperty(String propertyName) throws PropertyNotFoundException {
         if (properties.containsKey(propertyName)) {
             return properties.get(propertyName);
