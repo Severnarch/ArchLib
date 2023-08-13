@@ -5,7 +5,7 @@ plugins {
 group = 'io.github.severnarch'
 version = '1.0.0'
 
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 repositories {
     mavenCentral()
