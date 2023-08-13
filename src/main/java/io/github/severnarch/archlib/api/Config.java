@@ -26,11 +26,15 @@ public class Config {
         this.properties = new HashMap<>();
     }
 
-    public void save() throws IOException {
+    public boolean save() throws IOException {
         File saveFile = new File(parent.getDataFolder(), this.fileName+".yml");
+        boolean newCreations = false;
         if (!saveFile.exists()) {
-            saveFile.getParentFile().mkdirs();
-            saveFile.createNewFile();
+            Boolean createdDirs = saveFile.getParentFile().mkdirs();
+            Boolean createdFile = saveFile.createNewFile();
+            if (createdFile && createdDirs) {
+                newCreations = true;
+            }
         }
         FileWriter fileWriter = new FileWriter(saveFile, false);
         String writeContents = "# Configuration file created by ArchLib plugin";
@@ -39,6 +43,7 @@ public class Config {
         }
         fileWriter.write(writeContents);
         fileWriter.close();
+        return newCreations;
     }
 
     public void get() throws IOException {
@@ -55,12 +60,12 @@ public class Config {
         }
     }
 
-    public void delete() throws IOException {
+    public boolean delete() throws IOException {
         File deleteFile = new File(parent.getDataFolder(), this.fileName+".yml");
         if (!deleteFile.exists()) {
             throw new FileNotFoundException(this.fileName+".yml");
         } else {
-            deleteFile.delete();
+            return deleteFile.delete();
         }
     }
 
