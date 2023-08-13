@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'io.github.severnarch'
-version = '1.0.1'
+version = '1.0.2'
 
 apply plugin: 'maven-publish'
 
@@ -25,6 +25,10 @@ dependencies {
 
 def targetJavaVersion = 17
 java {
+    toolchain {
+        implementation = JvmImplementation.J9
+    }
+
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
