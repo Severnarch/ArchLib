@@ -1,11 +1,10 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 group = 'io.github.severnarch'
 version = '1.0.2'
-
-apply plugin: 'maven-publish'
 
 repositories {
     mavenCentral()
@@ -33,6 +32,14 @@ java {
     def javaVersion = JavaVersion.toVersion(targetJavaVersion)
     sourceCompatibility = javaVersion
     targetCompatibility = javaVersion
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+		from components.java
+        }
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
