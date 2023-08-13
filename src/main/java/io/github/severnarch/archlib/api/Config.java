@@ -55,7 +55,9 @@ public class Config {
             this.properties.clear();
             for (String line : readContent) {
                 String[] kvPair = line.split(": ");
-                this.properties.put(kvPair[0], kvPair[1]);
+                if (kvPair.length > 1) {
+                    this.properties.put(kvPair[0], kvPair[1]);
+                }
             }
         }
     }
