@@ -1,0 +1,8 @@
+name: ArchLib
+version: '${version}'
+main: io.github.severnarch.archlib.ArchLib
+api-version: '1.20'
+prefix: ArchLib
+load: STARTUP
+authors: [Severnarch]
+description: A library for most of my newer (1.20.1+) plugins.
