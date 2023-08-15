@@ -12,17 +12,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.logging.Level;
 
 public class Command {
     private final HashMap<String, CommandArgument> arguments;
     private String commandName;
     private final JavaPlugin parent;
 
-    private CommandExecutor executor;
-    private TabCompleter tabCompleter;
-
+    @SuppressWarnings("unused")
     public Command(String commandName, JavaPlugin parent) {
         this.commandName = commandName;
         this.parent = parent;
@@ -36,21 +32,21 @@ public class Command {
     }
 
     public void build() {
-        executor = new CommandExecutor() {
+        CommandExecutor executor = new CommandExecutor() {
 
             private CommandArgument getFinalArg(HashMap<String, CommandArgument> arguments, String[] cargs, Integer cindex) {
                 if (arguments.size() != 0 && cargs.length != 0) {
                     for (String argN : arguments.keySet()) {
                         CommandArgument arg = arguments.get(argN);
+                        if (cindex >= cargs.length) { cindex = cargs.length - 1; }
+                        if (cindex < 0) { cindex = 0; }
                         if (Objects.equals(argN, cargs[cindex])) {
-                            CommandArgument nextArg = getFinalArg(arg.getChildArguments(), cargs, cindex+1);
+                            CommandArgument nextArg = getFinalArg(arg.getChildArguments(), cargs, cindex + 1);
                             return Objects.requireNonNullElse(nextArg, arg);
                         }
                     }
-                    return null;
-                } else {
-                    return null;
                 }
+                return null;
             }
 
             private CommandArgument getFinalArg(HashMap<String, CommandArgument> arguments, String[] cargs) {
@@ -68,15 +64,16 @@ public class Command {
                 }
             }
         };
-        tabCompleter = new TabCompleter() {
+        TabCompleter tabCompleter = new TabCompleter() {
 
             private HashMap<String, CommandArgument> getArgN(HashMap<String, CommandArgument> arguments, String[] cargs, Integer target, Integer cindex) {
                 if (arguments.size() != 0 && cargs.length != 0) {
                     if (cindex.equals(target)) {
-                        return arguments;
-                    } else {
                         HashMap<String, CommandArgument> fills = new HashMap<>();
                         for (String argN : arguments.keySet()) {
+                            if (cindex >= cargs.length) { cindex = cargs.length - 1; }
+                            if (cindex < 0) { cindex = 0; }
+                            System.out.println(cindex+", "+cargs.length+", "+argN);
                             if (argN.startsWith(cargs[cindex])) {
                                 fills.put(argN, arguments.get(argN));
                             }
@@ -86,6 +83,8 @@ public class Command {
                         } else {
                             return null;
                         }
+                    } else {
+                        return getArgN(arguments, cargs, target, cindex + 1);
                     }
                 } else {
                     return null;
@@ -95,6 +94,7 @@ public class Command {
             private HashMap<String, CommandArgument> getArgN(HashMap<String, CommandArgument> arguments, String[] cargs, Integer target) {
                 return getArgN(arguments, cargs, target, 0);
             }
+
             @Nullable
             @Override
             public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String[] args) {
@@ -118,6 +118,7 @@ public class Command {
         return this.commandName;
     }
 
+    @SuppressWarnings("unused")
     public void setName(String newCommandName) {
         this.commandName = newCommandName;
     }
@@ -125,6 +126,8 @@ public class Command {
     public void addArgument(String argumentName, CommandArgument argument) {
         this.arguments.put(argumentName, argument);
     }
+
+     @SuppressWarnings("unused")
     public void setArgument(String argumentName, CommandArgument argument) throws ArgumentNotFoundException {
         if (arguments.containsKey(argumentName)) {
             arguments.remove(argumentName);
@@ -133,6 +136,8 @@ public class Command {
             throw new ArgumentNotFoundException(argumentName, this.commandName);
         }
     }
+
+    @SuppressWarnings("unused")
     public void removeArgument(String argumentName) throws ArgumentNotFoundException {
         if (arguments.containsKey(argumentName)) {
             arguments.remove(argumentName);
@@ -140,6 +145,8 @@ public class Command {
             throw new ArgumentNotFoundException(argumentName, this.commandName);
         }
     }
+
+    @SuppressWarnings("unused")
     public CommandArgument getArgument(String argumentName) throws ArgumentNotFoundException {
         if (arguments.containsKey(argumentName)) {
             return arguments.get(argumentName);
