@@ -4,5 +4,13 @@ main: io.github.severnarch.archlib.ArchLib
 api-version: '1.20'
 prefix: ArchLib
 load: STARTUP
-authors: [Severnarch]
+authors:
+  - Severnarch
 description: A library for most of my newer (1.20.1+) plugins.
+commands:
+  archlib:
+    description: The main command for ArchLib. Entirely informational.
+    permission: archlib.archlib
+permissions:
+  archlib.archlib:
+    description: The only permission for ArchLib, used to access the informational ArchLib command.

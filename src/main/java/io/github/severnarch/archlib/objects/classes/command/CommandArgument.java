@@ -22,7 +22,7 @@ public class CommandArgument {
         this.code = code;
     }
 
-    public void execute(CommandSender sender, Command command, String label, String[] args) {
+    public void execute(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         code.run(sender, command, label, args);
     }
 
@@ -51,5 +51,9 @@ public class CommandArgument {
         } else {
             throw new ArgumentNotFoundException(argumentName, parent.getName());
         }
+    }
+
+    public HashMap<String, CommandArgument> getChildArguments() {
+        return childArguments;
     }
 }
