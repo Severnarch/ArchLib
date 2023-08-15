@@ -9,7 +9,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -69,22 +68,14 @@ public class Command {
             private HashMap<String, CommandArgument> getArgN(HashMap<String, CommandArgument> arguments, String[] cargs, Integer target, Integer cindex) {
                 if (arguments.size() != 0 && cargs.length != 0) {
                     if (cindex.equals(target)) {
-                        HashMap<String, CommandArgument> fills = new HashMap<>();
+                        return arguments;
+                    } else {
                         for (String argN : arguments.keySet()) {
-                            if (cindex >= cargs.length) { cindex = cargs.length - 1; }
-                            if (cindex < 0) { cindex = 0; }
-                            System.out.println(cindex+", "+cargs.length+", "+argN);
                             if (argN.startsWith(cargs[cindex])) {
-                                fills.put(argN, arguments.get(argN));
+                                return getArgN(arguments.get(argN).getChildArguments(), cargs, target, cindex + 1);
                             }
                         }
-                        if (!fills.isEmpty()) {
-                            return fills;
-                        } else {
-                            return null;
-                        }
-                    } else {
-                        return getArgN(arguments, cargs, target, cindex + 1);
+                        return null;
                     }
                 } else {
                     return null;
@@ -92,17 +83,16 @@ public class Command {
             }
 
             private HashMap<String, CommandArgument> getArgN(HashMap<String, CommandArgument> arguments, String[] cargs, Integer target) {
-                return getArgN(arguments, cargs, target, 0);
+                return getArgN(arguments, cargs, target, 1);
             }
 
-            @Nullable
             @Override
             public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String[] args) {
                 HashMap<String, CommandArgument> targArg = getArgN(arguments, args, args.length);
                 if (targArg != null) {
                     return targArg.keySet().stream().toList();
                 } else {
-                    return null;
+                    return List.of("");
                 }
             }
         };
