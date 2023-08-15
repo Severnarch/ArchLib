@@ -4,38 +4,59 @@ import io.github.severnarch.archlib.api.Command;
 import io.github.severnarch.archlib.objects.classes.ArgumentedRunnable;
 import io.github.severnarch.archlib.objects.classes.command.CommandArgument;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.logging.Level;
 
 public final class ArchLib extends JavaPlugin {
+
+    public List<Plugin> getSupportingPlugins() {
+        List<Plugin> supportingPlugins = new java.util.ArrayList<>(List.of());
+        for (Plugin plugin : JavaPlugin.getPlugin(ArchLib.class).getServer().getPluginManager().getPlugins()) {
+            for (String pluginDepend : plugin.getDescription().getDepend()) {
+                if (pluginDepend.equalsIgnoreCase("archlib")) {
+                    supportingPlugins.add(plugin);
+                }
+            }
+        }
+        return supportingPlugins;
+    }
 
     @Override
     public void onEnable() {
         Command mainCommand = new Command("archlib");
         CommandArgument mainCommandVersionArg = new CommandArgument(new ArgumentedRunnable() {
-            @Override
-            public void run(Object... args) {
-                /*
-                Arguments provided to a CommandArgument:
-                    @NotNull CommandSender sender | args[0]
-                    @NotNull org.bukkit.command.Command command | args[1]
-                    @NotNull String label | args[2]
-                             String[] args | args[3]
-                 */
+            @Override public void run(Object... args) {
                 if (args.length == 4) {
-                    CommandSender sender = (CommandSender) args[0];
-                    org.bukkit.command.Command command = (org.bukkit.command.Command) args[1];
-                    String label = (String) args[2];
-                    String[] arguments = (String[]) args[3];
+                    CommandSender sender = (CommandSender) args[0];org.bukkit.command.Command command = (org.bukkit.command.Command) args[1];String label = (String) args[2];String[] arguments = (String[]) args[3];
 
                     sender.sendMessage("ArchLib is running on version "+JavaPlugin.getPlugin(ArchLib.class).getDescription().getVersion());
-                } else {
-                    getLogger().log(Level.SEVERE, "CommandArgument was passed an amount of arguments not equal to 4.");
                 }
             }
         }, mainCommand);
+        CommandArgument mainCommandPluginsArg = new CommandArgument(new ArgumentedRunnable() {
+            @Override public void run(Object... args) {
+                if (args.length == 4) {
+                    CommandSender sender = (CommandSender) args[0];org.bukkit.command.Command command = (org.bukkit.command.Command) args[1];String label = (String) args[2];String[] arguments = (String[]) args[3];
+
+                    sender.sendMessage("ArchLib is currently being used by "+getSupportingPlugins().size()+" plugins.");
+                }
+            }
+        }, mainCommand);
+        mainCommandPluginsArg.addChildArgument("list", new CommandArgument(new ArgumentedRunnable() {
+            @Override public void run(Object... args) {
+                CommandSender sender = (CommandSender) args[0];org.bukkit.command.Command command = (org.bukkit.command.Command) args[1];String label = (String) args[2];String[] arguments = (String[]) args[3];
+                String listString = "";
+                for (Plugin supportedPlugin : getSupportingPlugins()) {
+                    listString = listString.concat(" - "+supportedPlugin.getName()+"\n");
+                }
+                sender.sendMessage("ArchLib is currently being used by the following "+getSupportingPlugins().size()+" plugins:\n "+listString.strip());
+            }
+        }, mainCommand));
         mainCommand.addArgument("version", mainCommandVersionArg);
+        mainCommand.addArgument("plugins", mainCommandPluginsArg);
         mainCommand.build();
     }
 

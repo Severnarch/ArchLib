@@ -70,33 +70,37 @@ public class Command {
         };
         tabCompleter = new TabCompleter() {
 
-            private CommandArgument getArgN(HashMap<String, CommandArgument> arguments, String[] cargs, Integer target, Integer cindex) {
+            private HashMap<String, CommandArgument> getArgN(HashMap<String, CommandArgument> arguments, String[] cargs, Integer target, Integer cindex) {
                 if (arguments.size() != 0 && cargs.length != 0) {
-                    for (String argN : arguments.keySet()) {
-                        CommandArgument arg = arguments.get(argN);
-                        if (Objects.equals(argN, cargs[cindex])) {
-                            if (cindex.equals(target)) {
-                                return arg;
-                            } else {
-                                return getArgN(arg.getChildArguments(), cargs, target, cindex+1);
+                    if (cindex.equals(target)) {
+                        return arguments;
+                    } else {
+                        HashMap<String, CommandArgument> fills = new HashMap<>();
+                        for (String argN : arguments.keySet()) {
+                            if (argN.startsWith(cargs[cindex])) {
+                                fills.put(argN, arguments.get(argN));
                             }
                         }
+                        if (!fills.isEmpty()) {
+                            return fills;
+                        } else {
+                            return null;
+                        }
                     }
-                    return null;
                 } else {
                     return null;
                 }
             }
 
-            private CommandArgument getArgN(HashMap<String, CommandArgument> arguments, String[] cargs, Integer target) {
+            private HashMap<String, CommandArgument> getArgN(HashMap<String, CommandArgument> arguments, String[] cargs, Integer target) {
                 return getArgN(arguments, cargs, target, 0);
             }
             @Nullable
             @Override
             public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull org.bukkit.command.Command command, @NotNull String label, @NotNull String[] args) {
-                CommandArgument targArg = getArgN(arguments, args, args.length);
+                HashMap<String, CommandArgument> targArg = getArgN(arguments, args, args.length);
                 if (targArg != null) {
-                    return targArg.getChildArguments().keySet().stream().toList();
+                    return targArg.keySet().stream().toList();
                 } else {
                     return null;
                 }
