@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class Config {
     private final HashMap<String, Object> properties;
     private final String fileName;
