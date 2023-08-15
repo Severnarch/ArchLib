@@ -12,12 +12,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class Command {
     private final HashMap<String, CommandArgument> arguments;
     private String commandName;
     private final JavaPlugin parent;
 
-    @SuppressWarnings("unused")
     public Command(String commandName, JavaPlugin parent) {
         this.commandName = commandName;
         this.parent = parent;
@@ -108,7 +108,6 @@ public class Command {
         return this.commandName;
     }
 
-    @SuppressWarnings("unused")
     public void setName(String newCommandName) {
         this.commandName = newCommandName;
     }
@@ -117,7 +116,6 @@ public class Command {
         this.arguments.put(argumentName, argument);
     }
 
-     @SuppressWarnings("unused")
     public void setArgument(String argumentName, CommandArgument argument) throws ArgumentNotFoundException {
         if (arguments.containsKey(argumentName)) {
             arguments.remove(argumentName);
@@ -127,7 +125,6 @@ public class Command {
         }
     }
 
-    @SuppressWarnings("unused")
     public void removeArgument(String argumentName) throws ArgumentNotFoundException {
         if (arguments.containsKey(argumentName)) {
             arguments.remove(argumentName);
@@ -136,7 +133,6 @@ public class Command {
         }
     }
 
-    @SuppressWarnings("unused")
     public CommandArgument getArgument(String argumentName) throws ArgumentNotFoundException {
         if (arguments.containsKey(argumentName)) {
             return arguments.get(argumentName);

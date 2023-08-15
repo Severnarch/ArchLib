@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.HashMap;
 
-public class CommandArgument {
+@SuppressWarnings("unused") public class CommandArgument {
     private ArgumentedRunnable code;
     private final HashMap<String, CommandArgument> childArguments;
     private final Command parent;

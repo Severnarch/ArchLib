@@ -8,7 +8,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
-import java.util.logging.Level;
 
 public final class ArchLib extends JavaPlugin {
 
@@ -30,7 +29,7 @@ public final class ArchLib extends JavaPlugin {
         CommandArgument mainCommandVersionArg = new CommandArgument(new ArgumentedRunnable() {
             @Override public void run(Object... args) {
                 if (args.length == 4) {
-                    CommandSender sender = (CommandSender) args[0];org.bukkit.command.Command command = (org.bukkit.command.Command) args[1];String label = (String) args[2];String[] arguments = (String[]) args[3];
+                    CommandSender sender = (CommandSender) args[0];
 
                     sender.sendMessage("ArchLib is running on version "+JavaPlugin.getPlugin(ArchLib.class).getDescription().getVersion());
                 }
@@ -39,7 +38,7 @@ public final class ArchLib extends JavaPlugin {
         CommandArgument mainCommandPluginsArg = new CommandArgument(new ArgumentedRunnable() {
             @Override public void run(Object... args) {
                 if (args.length == 4) {
-                    CommandSender sender = (CommandSender) args[0];org.bukkit.command.Command command = (org.bukkit.command.Command) args[1];String label = (String) args[2];String[] arguments = (String[]) args[3];
+                    CommandSender sender = (CommandSender) args[0];
 
                     sender.sendMessage("ArchLib is currently being used by "+getSupportingPlugins().size()+" plugins.");
                 }
@@ -47,7 +46,7 @@ public final class ArchLib extends JavaPlugin {
         }, mainCommand);
         mainCommandPluginsArg.addChildArgument("list", new CommandArgument(new ArgumentedRunnable() {
             @Override public void run(Object... args) {
-                CommandSender sender = (CommandSender) args[0];org.bukkit.command.Command command = (org.bukkit.command.Command) args[1];String label = (String) args[2];String[] arguments = (String[]) args[3];
+                CommandSender sender = (CommandSender) args[0];
                 String listString = "";
                 for (Plugin supportedPlugin : getSupportingPlugins()) {
                     listString = listString.concat(" - "+supportedPlugin.getName()+"\n");
